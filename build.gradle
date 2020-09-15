@@ -11,6 +11,14 @@ repositories {
 }
 
 dependencies {
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+//    implementation 'org.slf4j:slf4j-simple:1.7.30'
+
+
     compile 'com.adobe.target:target-java-sdk:1.0.0'
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compile 'org.springframework.boot:spring-boot-starter-web'

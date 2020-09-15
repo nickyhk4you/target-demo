@@ -11,11 +11,13 @@
  */
 package com.adobe.target.sample.controller;
 
+import com.adobe.experiencecloud.ecid.visitor.CustomerState;
 import com.adobe.target.delivery.v1.model.ExecuteRequest;
 import com.adobe.target.delivery.v1.model.Trace;
 import com.adobe.target.edge.client.TargetClient;
 import com.adobe.target.edge.client.model.TargetDeliveryRequest;
 import com.adobe.target.edge.client.model.TargetDeliveryResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static com.adobe.target.sample.util.TargetRequestUtils.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/rest")
 public class TargetRestController {
@@ -52,6 +57,40 @@ public class TargetRestController {
         setCookies(targetResponse.getCookies(), response);
         return targetResponse;
     }
+
+    @GetMapping("/mboxTargetOnlyWithOpenId")
+    public TargetDeliveryResponse mboxTargetOnlyWithOpenId(
+            @RequestParam(name = "mbox", defaultValue = "server-side-mbox") String mbox,
+            @RequestParam(name = "openid", defaultValue = "") String openid,
+            HttpServletRequest request, HttpServletResponse response) {
+        log.info("execute mboxTargetOnlyWithOpenId with openid: "+openid);
+        ExecuteRequest executeRequest = new ExecuteRequest()
+                .mboxes(getMboxRequests(mbox));
+
+        TargetDeliveryRequest targetDeliveryRequest = null;
+        if(openid != null) {
+            Map<String, CustomerState> customerIds = new HashMap<>();
+            customerIds.put("openid", CustomerState.authenticated(openid));
+            targetDeliveryRequest = TargetDeliveryRequest.builder()
+                    .context(getContext(request))
+                    .execute(executeRequest)
+                    .cookies(getTargetCookies(request.getCookies()))
+                    .customerIds(customerIds)
+                    .build();
+        }else {
+            targetDeliveryRequest = TargetDeliveryRequest.builder()
+                    .context(getContext(request))
+                    .execute(executeRequest)
+                    .cookies(getTargetCookies(request.getCookies()))
+                    .build();
+        }
+
+
+        TargetDeliveryResponse targetResponse = targetJavaClient.getOffers(targetDeliveryRequest);
+        setCookies(targetResponse.getCookies(), response);
+        return targetResponse;
+    }
+
 
     @GetMapping("/mboxTargetOnlyAsync")
     public TargetDeliveryResponse mboxTargetOnlyAsync(
