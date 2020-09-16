@@ -60,8 +60,8 @@ public class ClientSampleApplication {
 //                .organizationId("0DD934B85278256B0A490D44@AdobeOrg")
 //                .build();
         ClientConfig clientConfig = ClientConfig.builder()
-                .client("adobeinternalags920")
-                .organizationId("3C4C3DE35A571CC70A495E43@AdobeOrg")
+                .client("zhouchuntechnology")
+                .organizationId("C6ED1A4D5D6500D20A495FA0@AdobeOrg")
                 .build();
         return TargetClient.create(clientConfig);
     }
