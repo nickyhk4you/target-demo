@@ -69,13 +69,13 @@ public class TargetRestController {
 
         TargetDeliveryRequest targetDeliveryRequest = null;
         if(openid != null) {
-            Map<String, CustomerState> customerIds = new HashMap<>();
-            customerIds.put("openid", CustomerState.authenticated(openid));
+//            Map<String, CustomerState> customerIds = new HashMap<>();
+//            customerIds.put("openid", CustomerState.authenticated(openid));
             targetDeliveryRequest = TargetDeliveryRequest.builder()
                     .context(getContext(request))
                     .execute(executeRequest)
                     .cookies(getTargetCookies(request.getCookies()))
-                    .customerIds(customerIds)
+//                    .customerIds(customerIds)
                     .marketingCloudVisitorId(openid)
                     .build();
             log.info("targetDeliveryRequest is:" + targetDeliveryRequest.toString());
