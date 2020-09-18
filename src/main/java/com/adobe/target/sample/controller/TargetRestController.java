@@ -76,7 +76,9 @@ public class TargetRestController {
                     .execute(executeRequest)
                     .cookies(getTargetCookies(request.getCookies()))
                     .customerIds(customerIds)
+                    .marketingCloudVisitorId(openid)
                     .build();
+            log.info("targetDeliveryRequest is:" + targetDeliveryRequest.toString());
         }else {
             targetDeliveryRequest = TargetDeliveryRequest.builder()
                     .context(getContext(request))
